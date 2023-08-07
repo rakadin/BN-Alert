@@ -1,3 +1,32 @@
 <resources>
     <string name="app_name">BatterySaver_Alert</string>
+    <string name="home_text">Home</string>
+    <string name="level_text">Level:</string>
+    <string name="battery_status_text">Battery Status</string>
+    <string name="signal_status_text">Signal Status</string>
+    <string name="network_status_text">Network Status</string>
+    <string name="percentage_text">Percentage:</string>
+    <string name="temperature_text">Temperature:</string>
+    <string name="charging_status_text">Charging Status:</string>
+    <string name="last_charge_text">Last charge:</string>
+    <string name="history_text">History</string>
+    <string name="setting_text">Setting</string>
+    <string name="low_battery_alarm_percent_text">Low battery alarm percent</string>
+    <string name="turn_on_notifications_text">Notifications dialog</string>
+    <string name="turn_off_alert_for_text">Turn off alert for</string>
+    <string-array name="low_percent_arrray">
+        <item>10%</item>
+        <item>15%</item>
+        <item>20%</item>
+        <item>25%</item>
+        <item>30%</item>
+    </string-array>
+    <string-array name="time_chooser_arrray">
+        <item>off</item>
+        <item>15 mins</item>
+        <item>30 mins</item>
+        <item>1 hour</item>
+        <item>8 hours</item>
+        <item>Forever</item>
+    </string-array>
 </resources>

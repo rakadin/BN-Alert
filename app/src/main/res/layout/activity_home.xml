@@ -1,9 +1,316 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/home_activity_gradient_background"
     tools:context=".activities.HomeActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:text="@string/home_text"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.07"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:text="@string/battery_status_text"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.05"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="60dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:text="@string/network_status_text"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.05"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintWidth_percent="0.5" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_marginTop="60dp"
+        android:id="@+id/bat_gif"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginLeft="40dp"
+        android:background="@drawable/button_gradient_background"
+        android:scaleType="center"
+        android:src="@drawable/battery_full"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TableLayout
+        android:gravity="center"
+        android:id="@+id/tableLayout"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/bat_gif"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintWidth_percent="0.5">
+        <TableRow>
+            <TextView
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:text="@string/percentage_text"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/percent_in"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="78%"
+                android:textSize="15dp"
+                android:textStyle="normal"
+                android:textColor="@color/black"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="@string/temperature_text"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/temperature_in"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="78°C"
+                android:textSize="15dp"
+                android:textStyle="normal"
+                android:textColor="@color/black"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:text="@string/charging_status_text"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/chargeStatus_in"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="Full"
+                android:textSize="15dp"
+                android:textStyle="normal"
+                android:textColor="@color/black"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:text="@string/last_charge_text"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/chargeLast_in"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:text="8 hours ago"
+                android:textSize="15dp"
+                android:textStyle="normal"
+                android:textColor="@color/black"/>
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/tableLayout_2"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/signal_gif"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintWidth_percent="0.5">
+
+        <TableRow android:gravity="end">
+
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="Network Type"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/netType_in"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="Wifi"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="normal" />
+        </TableRow>
+
+        <TableRow android:gravity="end">
+
+            <TextView
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:text="Network Status:"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/netStatus_in"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="Wonderful"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="normal" />
+        </TableRow>
+
+        <TableRow android:gravity="end">
+
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="Network rate:"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/netRate_in"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="1.2 mb/s"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="normal" />
+        </TableRow>
+
+
+        <TableRow android:gravity="end">
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:text="Provider:"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/provider_in"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="Viettel"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="normal" />
+        </TableRow>
+    </TableLayout>
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/signal_gif"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/button_gradient_background"
+        android:scaleType="center"
+        android:src="@drawable/wifi_gif"
+        app:layout_constraintBottom_toTopOf="@+id/toSetting"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:src="@drawable/history"
+        android:scaleType="fitCenter"
+        android:id="@+id/toHistory"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="5dp"
+        android:onClick="openHistoryFromHome"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.065"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintWidth_percent="0.5"
+        android:background="@drawable/history_button_gradient_background"/>
+
+    <ImageButton
+        android:id="@+id/toSetting"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/setting_button_gradient_background"
+        android:onClick="openSettingFromHome"
+        android:scaleType="fitCenter"
+        android:padding="5dp"
+        android:src="@drawable/setting"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.065"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/toHistory"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintWidth_percent="0.5"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
