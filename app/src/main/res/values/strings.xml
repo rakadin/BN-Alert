@@ -7,13 +7,17 @@
     <string name="network_status_text">Network Status</string>
     <string name="percentage_text">Percentage:</string>
     <string name="temperature_text">Temperature:</string>
-    <string name="charging_status_text">Charging Status:</string>
+    <string name="charging_status_text">Charging State:</string>
     <string name="last_charge_text">Last charge:</string>
     <string name="history_text">History</string>
     <string name="setting_text">Setting</string>
     <string name="low_battery_alarm_percent_text">Low battery alarm percent</string>
     <string name="turn_on_notifications_text">Notifications dialog</string>
     <string name="turn_off_alert_for_text">Turn off alert for</string>
+    <string name="bluetooth_status_text">Bluetooth Status</string>
+    <string name="connectivity_text">Connectivity</string>
+    <string name="last_connect_text">Last connect:</string>
+    <string name="capacity_text">Capacity:</string>
     <string-array name="low_percent_arrray">
         <item>10%</item>
         <item>15%</item>
