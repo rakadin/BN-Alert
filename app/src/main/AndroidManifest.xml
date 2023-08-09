@@ -18,6 +18,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>

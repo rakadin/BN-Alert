@@ -18,6 +18,7 @@
     <string name="connectivity_text">Connectivity</string>
     <string name="last_connect_text">Last connect:</string>
     <string name="capacity_text">Capacity:</string>
+    <string name="heat_limit_alarm_text">Heat limit alarm</string>
     <string-array name="low_percent_arrray">
         <item>10%</item>
         <item>15%</item>
@@ -32,5 +33,12 @@
         <item>1 hour</item>
         <item>8 hours</item>
         <item>Forever</item>
+    </string-array>
+    <string-array name="heat_limit_chooser_arrray">
+        <item>40°C</item>
+        <item>45°C</item>
+        <item>50°C</item>
+        <item>55°C</item>
+        <item>60°C</item>
     </string-array>
 </resources>
