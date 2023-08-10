@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.BatteryManager
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.batterysaver_alert.R
 import com.example.batterysaver_alert.broadcast_receiver.BattetyReceiver
+import com.example.batterysaver_alert.broadcast_receiver.NetworkReceiver
 import pl.droidsonroids.gif.GifImageView
 import java.util.logging.Level
 
@@ -27,6 +29,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var battery_gif: GifImageView
 
     private val batteryReceiver = BattetyReceiver()
+    private val networkReceiver = NetworkReceiver()
 
     private val batteryDataReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -85,6 +88,14 @@ class HomeActivity : AppCompatActivity() {
         val batteryDataIntentFilter2 = IntentFilter("com.example.BATTERY_POWER_DISCONNECTED")
         LocalBroadcastManager.getInstance(this).registerReceiver(batteryDataReceiver, batteryDataIntentFilter2)
 
+        // Register the NetworkReceiver with the CONNECTIVITY_ACTION intent filter
+        val intentFilterNetwork = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkReceiver, intentFilterNetwork)
+
+//        // Register the network data receiver to receive custom "com.example.BATTERY_DATA_CHANGED" broadcasts
+//        val batteryDataIntentFilter3 = IntentFilter("com.example.BATTERY_POWER_DISCONNECTED")
+//        LocalBroadcastManager.getInstance(this).registerReceiver(batteryDataReceiver, batteryDataIntentFilter2)
+
     }
 
     override fun onResume() {
@@ -97,6 +108,8 @@ class HomeActivity : AppCompatActivity() {
         // it wont trigger it when the app is not running too
         unregisterReceiver(batteryReceiver)
         LocalBroadcastManager.getInstance(this).unregisterReceiver(batteryDataReceiver)
+        unregisterReceiver(networkReceiver)
+
     }
     fun getIDs(){
         percentTextView = findViewById(R.id.percent_in)

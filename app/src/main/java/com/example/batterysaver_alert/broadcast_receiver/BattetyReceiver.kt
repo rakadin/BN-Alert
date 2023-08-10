@@ -74,7 +74,7 @@ class BattetyReceiver : BroadcastReceiver() {
                 }
 
             }
-            if(isCharging){ // if charging and the phone is too hot -> send notificatiob
+            if(isCharging){ // if charging and the phone is too hot -> send notification
                 if(temperature>=55){
                     appNotification.setBatteryNotificationForUser(context,55.0f,TYPE_BATTERY_HOT_WHEN_CHARGING,temperature)
                 }
