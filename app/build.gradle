@@ -41,6 +41,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     // For GIF support
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.21'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
 
     // For using Glide with GIF support
     implementation 'com.github.bumptech.glide:glide:4.12.0'
