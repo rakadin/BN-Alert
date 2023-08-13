@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.BatteryManager
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.batterysaver_alert.R
 import com.example.batterysaver_alert.broadcast_receiver.BattetyReceiver
+import com.example.batterysaver_alert.broadcast_receiver.NetworkReceiver
 import pl.droidsonroids.gif.GifImageView
 import java.util.logging.Level
 
@@ -23,14 +25,21 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var capacityText : TextView
     private lateinit var temperatureTextView :TextView
     private lateinit var chargeStateTextView: TextView
+    private lateinit var netTypeTextView : TextView
+    private lateinit var netStatusText : TextView
+    private lateinit var netRateTextView :TextView
+    private lateinit var netProviderTextView: TextView
     private lateinit var lastCharge : TextView
     private lateinit var battery_gif: GifImageView
 
     private val batteryReceiver = BattetyReceiver()
+    private val networkReceiver = NetworkReceiver()
 
     private val batteryDataReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            Log.v("network_connect","connected")
             if (intent?.action == "com.example.BATTERY_DATA_CHANGED") {
+                Log.v("network_connect","connected")
                 val batteryLevel = intent.getIntExtra("batteryLevel", -1)/1.0f
                 val batteryTemperature = intent.getFloatExtra("batteryTemperature", -1.0f)
                 val batteryCapacity = intent.getIntExtra("batteryCapacity",1000)
@@ -52,6 +61,23 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
             if(intent?.action == "com.example.BATTERY_POWER_DISCONNECTED"){
+
+            }
+        }
+    }
+    private val networkDataReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == ConnectivityManager.CONNECTIVITY_ACTION) {
+                val networkType = intent.getStringExtra("networkType")
+                val networkStrength = intent.getStringExtra("networkStrength")
+                val networkSpeed = intent.getDoubleExtra("networkSpeed", 0.0)
+                val networkProvider = intent.getStringExtra("provider")
+
+                // update UI
+                updateNetworkTypeTextView(networkType!!)
+                updateNetworkStatusTextView(networkStrength!!)
+                updateNetworkRateTextView(networkSpeed)
+                updateNetworkProviderTextView(networkProvider!!)
 
             }
         }
@@ -85,6 +111,14 @@ class HomeActivity : AppCompatActivity() {
         val batteryDataIntentFilter2 = IntentFilter("com.example.BATTERY_POWER_DISCONNECTED")
         LocalBroadcastManager.getInstance(this).registerReceiver(batteryDataReceiver, batteryDataIntentFilter2)
 
+        // Register the NetworkReceiver with the CONNECTIVITY_ACTION intent filter
+        val intentFilterNetwork = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(networkReceiver, intentFilterNetwork)
+        // Register the network data receiver to receive custom "com.example.WIFI_DATA_CHANGED" broadcasts
+        val networkDataIntentFilter3 = IntentFilter("com.example.WIFI_DATA_CHANGED")
+        LocalBroadcastManager.getInstance(this).registerReceiver(networkDataReceiver, networkDataIntentFilter3)
+
+
     }
 
     override fun onResume() {
@@ -97,6 +131,8 @@ class HomeActivity : AppCompatActivity() {
         // it wont trigger it when the app is not running too
         unregisterReceiver(batteryReceiver)
         LocalBroadcastManager.getInstance(this).unregisterReceiver(batteryDataReceiver)
+        unregisterReceiver(networkReceiver)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(networkDataReceiver)
     }
     fun getIDs(){
         percentTextView = findViewById(R.id.percent_in)
@@ -105,6 +141,10 @@ class HomeActivity : AppCompatActivity() {
         chargeStateTextView = findViewById(R.id.chargeStatus_in)
         lastCharge = findViewById(R.id.chargeLast_in)
         battery_gif= findViewById(R.id.bat_gif)
+        netTypeTextView = findViewById(R.id.netType_in)
+        netStatusText = findViewById(R.id.netStatus_in)
+        netRateTextView = findViewById(R.id.netRate_in)
+        netProviderTextView = findViewById(R.id.provider_in)
     }
     /*
     update UI for Battery
@@ -165,6 +205,21 @@ class HomeActivity : AppCompatActivity() {
     end update UI for Battery
      */
 
+    /*
+    set UI for networkReceiver
+     */
+    fun updateNetworkTypeTextView(text : String){
+        netTypeTextView.text = "$text"
+    }
+    fun updateNetworkStatusTextView(text : String){
+        netStatusText.text = "$text"
+    }
+    fun updateNetworkRateTextView(status : Double){
+        netTypeTextView.text = "$status Mbps"
+    }
+    fun updateNetworkProviderTextView(provider : String){
+        netProviderTextView.text = "$provider"
+    }
     // this fun is use to get unplug time from shared preference and calculate timeAgo to set text
     fun setLastCharge(textview: TextView){
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
