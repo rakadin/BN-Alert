@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Looper
 import android.telephony.TelephonyManager
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import java.text.DecimalFormat
 import java.util.*
 
@@ -36,10 +37,21 @@ class NetworkReceiver : BroadcastReceiver() {
                 // You can now use this information as needed
                 Log.d("NetworkReceiver", "Network Type: $networkType")
                 Log.d("NetworkReceiver", "Network Type: $networkTypeName")
-                Log.d("NetworkReceiver", "Network Strength: ${returnConnectStrength(networkStrength)}")
-                Log.d("NetworkReceiver", "Network download: $uploadRate")
+
                 // Start a timer to calculate rates
                 startRateCalculationTimer()
+                Log.d("NetworkReceiver", "Network Strength: ${returnConnectStrength(networkStrength)}")
+                Log.d("NetworkReceiver", "Network download: $uploadRate")
+                Log.d("NetworkReceiver", "Network download: $downloadRate")
+
+                //send data to activity
+                val localIntent = Intent("com.example.WIFI_DATA_CHANGED")
+                localIntent.putExtra("networkType", networkTypeName)
+                localIntent.putExtra("networkStrength",  networkStrength)
+                localIntent.putExtra("networkSpeed",networkSpeedMbps)
+                localIntent.putExtra("provider", getNetworkProviderName(context))
+                Log.d("NetworkReceiver", "Network provider: ${getNetworkProviderName(context)}")
+                LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent)
             }
         }
     }
@@ -82,6 +94,15 @@ class NetworkReceiver : BroadcastReceiver() {
         // Update the start values for the next interval
         uploadBytesStart = uploadBytesEnd
         downloadBytesStart = downloadBytesEnd
+        // Log the calculated rates and speed
+        Log.d("NetworkReceiver", "Upload Rate: ${roundToDecimalPlaces(uploadRateMbps,1)} Mbps")
+        Log.d("NetworkReceiver", "Download Rate: ${roundToDecimalPlaces(downloadRateMbps,1)} Mbps")
+        Log.d("NetworkReceiver", "Network Speed: ${roundToDecimalPlaces(networkSpeedMbps,1)} Mbps")
+
+    }
+    fun getNetworkProviderName(context: Context): String {
+        val telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+        return telephonyManager.networkOperatorName
     }
     private fun returnConnectStrength(strength : Int) : String{
 //        0-2: Weak signal
