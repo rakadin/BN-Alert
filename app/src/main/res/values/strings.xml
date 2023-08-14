@@ -15,7 +15,7 @@
     <string name="turn_on_notifications_text">Notifications dialog</string>
     <string name="turn_off_alert_for_text">Turn off alert for</string>
     <string name="bluetooth_status_text">Bluetooth Status</string>
-    <string name="connectivity_text">Connectivity</string>
+    <string name="connectivity_text">Bluetooth state:</string>
     <string name="last_connect_text">Last connect:</string>
     <string name="capacity_text">Capacity:</string>
     <string name="heat_limit_alarm_text">Heat limit alarm</string>

@@ -1,9 +1,14 @@
 package com.example.batterysaver_alert.activities
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.BatteryManager
 import android.os.Bundle
@@ -13,20 +18,20 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.batterysaver_alert.R
 import com.example.batterysaver_alert.broadcast_receiver.BattetyReceiver
+import com.example.batterysaver_alert.broadcast_receiver.BluetoothReceiver
 import com.example.batterysaver_alert.broadcast_receiver.NetworkReceiver
 import com.example.batterysaver_alert.notifications.AppNotification
 import pl.droidsonroids.gif.GifImageView
+import java.text.DecimalFormat
 import java.util.logging.Level
 
+
 class HomeActivity : AppCompatActivity() {
-    private val TYPE_BATTERY_LOW = "low"
-    private val TYPE_BATTERY_HOT = "temperature"
-    private val TYPE_BATTERY_LOW_ALARM = "alarm_low"
-    private val TYPE_BATTERY_HOT_ALARM = "temperature"
-    private val TYPE_BATTERY_HOT_WHEN_CHARGING = "too_hot_to_charge"
+
     private lateinit var percentTextView : TextView
     private lateinit var capacityText : TextView
     private lateinit var temperatureTextView :TextView
@@ -36,10 +41,16 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var netRateTextView :TextView
     private lateinit var netProviderTextView: TextView
     private lateinit var lastCharge : TextView
+    private lateinit var bluetooth_connectivity : TextView
+    private lateinit var bluetooth_name : TextView
+    private lateinit var bluetooth_Strength : TextView
+    private lateinit var bluetooth_last_connect : TextView
+
     private lateinit var battery_gif: GifImageView
 
     private val batteryReceiver = BattetyReceiver()
     private val networkReceiver = NetworkReceiver()
+    private val bluetoothReceiver = BluetoothReceiver()
 
     private val batteryDataReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -88,6 +99,23 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
+    private val bluetoothDataReceiver = object : BroadcastReceiver() {
+        @SuppressLint("MissingPermission")
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "com.example.BLUETOOTH_STATE_CHANGED") {
+                Log.v("BluetoothReceiver","create()")
+                val state = intent.getStringExtra("bluetoothState")
+                // update UI
+                updateBluetoothConnectivityUI(state!!)
+            }
+            if( intent?.action ==  "com.example.BLUETOOTH_DEVICE_CONNECTED"){
+                Log.v("BluetoothReceiver","connected()")
+
+            }
+
+
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
 
         Log.v("trigger","create()")
@@ -125,11 +153,34 @@ class HomeActivity : AppCompatActivity() {
         val networkDataIntentFilter3 = IntentFilter("com.example.WIFI_DATA_CHANGED")
         LocalBroadcastManager.getInstance(this).registerReceiver(networkDataReceiver, networkDataIntentFilter3)
 
+        // Register the BluetoothReceiver with the CONNECTIVITY_ACTION intent filter
+        val intentFilterBluetooth = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+        registerReceiver(bluetoothReceiver, intentFilterBluetooth)
+        // Register the bluetooth data receiver to receive custom "com.example.BLUETOOTH_STATE_CHANGED" broadcasts
+        val bluetoothDataIntentFilter4 = IntentFilter("com.example.BLUETOOTH_STATE_CHANGED")
+        LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothDataReceiver, bluetoothDataIntentFilter4)
 
+        // Register the BluetoothReceiver with the ACTION_ACL_CONNECTED intent filter
+        val intentFilterBluetooth2 = IntentFilter(BluetoothDevice.ACTION_ACL_CONNECTED)
+        registerReceiver(bluetoothReceiver, intentFilterBluetooth2)
+
+        // Register the bluetooth data receiver to receive custom "com.example.BLUETOOTH_STATE_CHANGED" broadcasts
+        val bluetoothDataIntentFilter5 = IntentFilter("com.example.BLUETOOTH_DEVICE_CONNECTED")
+        LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothDataReceiver, bluetoothDataIntentFilter5)
+
+
+    }
+
+
+    override fun onStart() {
+        super.onStart()
     }
 
     override fun onResume() {
         super.onResume()
+        if(bluetoothReceiver.isBluetoothOn()){
+            updateBluetoothConnectivityUI("On")
+        }
 
     }
     override fun onDestroy() {
@@ -140,6 +191,8 @@ class HomeActivity : AppCompatActivity() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(batteryDataReceiver)
         unregisterReceiver(networkReceiver)
         LocalBroadcastManager.getInstance(this).unregisterReceiver(networkDataReceiver)
+        unregisterReceiver(bluetoothReceiver)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(bluetoothDataReceiver)
     }
     fun getIDs(){
         percentTextView = findViewById(R.id.percent_in)
@@ -152,6 +205,11 @@ class HomeActivity : AppCompatActivity() {
         netStatusText = findViewById(R.id.netStatus_in)
         netRateTextView = findViewById(R.id.netRate_in)
         netProviderTextView = findViewById(R.id.provider_in)
+        bluetooth_connectivity = findViewById(R.id.bluetooth_connectivity)
+        bluetooth_name = findViewById(R.id.bluetooth_name)
+        bluetooth_Strength = findViewById(R.id.bluetooth_strength)
+        bluetooth_last_connect = findViewById(R.id.bluetooth_last_connect)
+
     }
     /*
     update UI for Battery
@@ -223,10 +281,28 @@ class HomeActivity : AppCompatActivity() {
         netStatusText.text = "$text"
     }
     fun updateNetworkRateTextView(status : Double){
-        netRateTextView.text = "$status Kbps"
+        netRateTextView.text = "${roundToDecimalPlaces(status,2)} Kbps"
     }
     fun updateNetworkProviderTextView(provider : String){
         netProviderTextView.text = "$provider"
+    }
+    /*
+    end setUI for network
+     */
+    /*
+    start set UI for bluetooth
+     */
+    fun updateBluetoothConnectivityUI(status : String){
+        bluetooth_connectivity.text = status
+    }
+    fun updateBluetoothNameUI(name : String){
+        bluetooth_name.text = name
+    }
+    fun updateBluetoothStrengthUI(status : String){
+        bluetooth_Strength.text = status
+    }
+    fun updateBluetoothLastConnectUI(name : String){
+        bluetooth_last_connect.text = name
     }
     // this fun is use to get unplug time from shared preference and calculate timeAgo to set text
     fun setLastCharge(textview: TextView){
@@ -245,5 +321,16 @@ class HomeActivity : AppCompatActivity() {
     fun openSettingFromHome(view: View) {
         val intent = Intent(this,SettingActivity::class.java)
         startActivity(intent)
+    }
+    fun roundToDecimalPlaces(number: Double, decimalPlaces: Int): String {
+        val pattern = when (decimalPlaces) {
+            0 -> "#"
+            1 -> "#.#"
+            2 -> "#.##"
+            // Add more cases if needed
+            else -> "#.###" // Default pattern for more than 2 decimal places
+        }
+        val decimalFormat = DecimalFormat(pattern)
+        return decimalFormat.format(number)
     }
 }
