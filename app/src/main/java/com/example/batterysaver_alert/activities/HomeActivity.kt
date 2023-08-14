@@ -17,10 +17,16 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.batterysaver_alert.R
 import com.example.batterysaver_alert.broadcast_receiver.BattetyReceiver
 import com.example.batterysaver_alert.broadcast_receiver.NetworkReceiver
+import com.example.batterysaver_alert.notifications.AppNotification
 import pl.droidsonroids.gif.GifImageView
 import java.util.logging.Level
 
 class HomeActivity : AppCompatActivity() {
+    private val TYPE_BATTERY_LOW = "low"
+    private val TYPE_BATTERY_HOT = "temperature"
+    private val TYPE_BATTERY_LOW_ALARM = "alarm_low"
+    private val TYPE_BATTERY_HOT_ALARM = "temperature"
+    private val TYPE_BATTERY_HOT_WHEN_CHARGING = "too_hot_to_charge"
     private lateinit var percentTextView : TextView
     private lateinit var capacityText : TextView
     private lateinit var temperatureTextView :TextView
@@ -67,7 +73,7 @@ class HomeActivity : AppCompatActivity() {
     }
     private val networkDataReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == ConnectivityManager.CONNECTIVITY_ACTION) {
+            if (intent?.action == "com.example.WIFI_DATA_CHANGED") {
                 val networkType = intent.getStringExtra("networkType")
                 val networkStrength = intent.getStringExtra("networkStrength")
                 val networkSpeed = intent.getDoubleExtra("networkSpeed", 0.0)
@@ -83,6 +89,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
+
         Log.v("trigger","create()")
         super.onCreate(savedInstanceState)
         // Hide the status bar
@@ -163,6 +170,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun updateBatteryGifWhenCharging(temperature : Float){
+
         chargeStateTextView?.text = "Charging"
         lastCharge?.text = "Now"
         battery_gif?.setImageResource(R.drawable.battery_charge)
@@ -215,7 +223,7 @@ class HomeActivity : AppCompatActivity() {
         netStatusText.text = "$text"
     }
     fun updateNetworkRateTextView(status : Double){
-        netTypeTextView.text = "$status Mbps"
+        netRateTextView.text = "$status Kbps"
     }
     fun updateNetworkProviderTextView(provider : String){
         netProviderTextView.text = "$provider"

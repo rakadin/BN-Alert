@@ -31,24 +31,16 @@ class NetworkReceiver : BroadcastReceiver() {
             if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
                 val networkType = activeNetworkInfo.type
                 val networkTypeName = activeNetworkInfo.typeName
-                val networkStrength = getNetworkStrength(context)
-                val uploadRate = TrafficStats.getTotalTxBytes()/ 1024 // Upload rate in KB
-                val downloadRate = TrafficStats.getTotalRxBytes()/ 1024 // Download rate in KB
                 // You can now use this information as needed
                 Log.d("NetworkReceiver", "Network Type: $networkType")
                 Log.d("NetworkReceiver", "Network Type: $networkTypeName")
 
-                // Start a timer to calculate rates
-                startRateCalculationTimer()
-                Log.d("NetworkReceiver", "Network Strength: ${returnConnectStrength(networkStrength)}")
-                Log.d("NetworkReceiver", "Network download: $uploadRate")
-                Log.d("NetworkReceiver", "Network download: $downloadRate")
 
                 //send data to activity
                 val localIntent = Intent("com.example.WIFI_DATA_CHANGED")
+                // Start a timer to calculate rates
+                startRateCalculationTimer(localIntent,context)
                 localIntent.putExtra("networkType", networkTypeName)
-                localIntent.putExtra("networkStrength",  networkStrength)
-                localIntent.putExtra("networkSpeed",networkSpeedMbps)
                 localIntent.putExtra("provider", getNetworkProviderName(context))
                 Log.d("NetworkReceiver", "Network provider: ${getNetworkProviderName(context)}")
                 LocalBroadcastManager.getInstance(context).sendBroadcast(localIntent)
@@ -68,11 +60,16 @@ class NetworkReceiver : BroadcastReceiver() {
         // You can convert it to a more meaningful representation or use it as needed
         return signalStrength!!.level
     }
-    private fun startRateCalculationTimer() {
+    private fun startRateCalculationTimer(localIntent: Intent, context: Context) {
         timer = Timer()
         timer?.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 calculateAndLogRates()
+                val networkStrength = getNetworkStrength(context)
+                val uploadRate = TrafficStats.getTotalTxBytes()/ 1024 // Upload rate in KB
+                val downloadRate = TrafficStats.getTotalRxBytes()/ 1024 // Download rate in KB
+                localIntent.putExtra("networkStrength", returnConnectStrength(networkStrength))
+                localIntent.putExtra("networkSpeed",networkSpeedMbps)
             }
         }, 0, 1000) // Calculate rates every 1 second (adjust interval as needed)
     }
