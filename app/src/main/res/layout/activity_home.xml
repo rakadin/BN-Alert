@@ -272,7 +272,7 @@
                 android:layout_height="wrap_content"
                 android:text="Viettel"
                 android:textColor="@color/black"
-                android:textSize="15dp"
+                android:textSize="12dp"
                 android:textStyle="normal" />
         </TableRow>
     </TableLayout>
