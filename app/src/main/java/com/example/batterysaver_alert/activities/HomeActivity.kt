@@ -17,6 +17,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -54,6 +55,7 @@ class HomeActivity : AppCompatActivity() {
 
     private val batteryDataReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            val appNotification = AppNotification()
             Log.v("network_connect","connected")
             if (intent?.action == "com.example.BATTERY_DATA_CHANGED") {
                 Log.v("network_connect","connected")
@@ -71,6 +73,8 @@ class HomeActivity : AppCompatActivity() {
                 }
                 else{
                     updateBatteryGifWhenNotCharging(batteryTemperature,batteryLevel)
+                    val TYPE_BATTERY_LOW = "low"
+                    appNotification.setBatteryNotificationForUser(context,25.0f,TYPE_BATTERY_LOW,batteryLevel.toFloat())
                 }
 
                 if(isFull){
@@ -100,7 +104,6 @@ class HomeActivity : AppCompatActivity() {
         }
     }
     private val bluetoothDataReceiver = object : BroadcastReceiver() {
-        @SuppressLint("MissingPermission")
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == "com.example.BLUETOOTH_STATE_CHANGED") {
                 Log.v("BluetoothReceiver","create()")
@@ -124,6 +127,14 @@ class HomeActivity : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_home)
         supportActionBar?.hide()// hide the action bar
+        /*
+        get message from pending intent
+         */
+        if(intent.hasExtra("message")){
+            val message = intent.getStringExtra("message")
+            Log.v("trigger_pendingIntent","$message")
+            Toast.makeText(this, "get $message", Toast.LENGTH_SHORT).show()
+        }
         //get ids//setlast charge
         val lastchargeText : TextView = findViewById(R.id.chargeLast_in)
         setLastCharge(lastchargeText)// set last time user plug in charger

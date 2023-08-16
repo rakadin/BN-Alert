@@ -2,11 +2,14 @@ package com.example.batterysaver_alert.notifications
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.batterysaver_alert.R
+import com.example.batterysaver_alert.activities.HomeActivity
 
 class AppNotification {
     private val TYPE_BATTERY_LOW = "low"
@@ -17,6 +20,18 @@ class AppNotification {
     // create notification for user
     fun setBatteryNotificationForUser(context: Context?, limit: Float?, type:String, temp: Float){
         val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        /*
+        create pending intent
+         */
+        val targetActivity = Intent(context, HomeActivity::class.java)
+        targetActivity.putExtra("message","welcome back from pending intent")
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            targetActivity,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
         // Create a notification channel (required for Android 8.0 and above)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -33,6 +48,7 @@ class AppNotification {
             notificationBuilder.setContentTitle("Battery Alert")
                 .setContentTitle("Plug charger in please😥")
                 .setContentText("Battery level is below $limit% 🥺")
+                .setContentIntent(pendingIntent)// testing pending intent
                 .setSmallIcon(R.drawable.battery_warn)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
@@ -43,6 +59,7 @@ class AppNotification {
                 .setContentText("Your battery temperature is too hot🥵! $temp°C")
                 .setSmallIcon(R.drawable.battery_warn)
                 .setContentTitle("TOO HOT😱")
+                .setContentIntent(pendingIntent)// testing pending intent
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
         }

@@ -57,7 +57,14 @@ class BattetyReceiver : BroadcastReceiver() {
                         // should save database in this
                         appNotification.setBatteryNotificationForUser(context,numeric_percent_Value,TYPE_BATTERY_LOW,batteryLevel.toFloat())
                     }
+                    if(batteryLevel >= numeric_percent_Value!!){// battery low
+                        // should save database in this
+                        appNotification.setBatteryNotificationForUser(context,numeric_percent_Value,TYPE_BATTERY_LOW,batteryLevel.toFloat())
+                    }
                     if(temperature >= numeric_heat_Value!!){// batterh heat hight
+                        appNotification.setBatteryNotificationForUser(context,numeric_heat_Value,TYPE_BATTERY_HOT,temperature)
+                    }
+                    if(temperature >= 15){// batterh heat hight
                         appNotification.setBatteryNotificationForUser(context,numeric_heat_Value,TYPE_BATTERY_HOT,temperature)
                     }
                 }
